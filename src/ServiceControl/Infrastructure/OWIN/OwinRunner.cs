@@ -10,7 +10,9 @@
     {
         public void Start()
         {
-            webApp = WebApp.Start<Startup>(Settings.ApiUrl);
+            var options = new StartOptions(Settings.ApiUrl);
+            options.Urls.Add(Settings.ApiUrl.Replace("/api", ""));
+            webApp = WebApp.Start<Startup>(options);
             Logger.InfoFormat("Api is now accepting requests on {0}", Settings.ApiUrl);
         }
 

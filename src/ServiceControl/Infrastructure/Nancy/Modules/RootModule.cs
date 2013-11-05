@@ -17,6 +17,42 @@
 
         public RootModule()
         {
+            Get["/api"] = parameters =>
+            {
+                var model = new RootUrls
+                {
+                    AuditUrl = BaseUrl + "/audit/{?page,per_page,direction,sort}",
+                    EndpointsAuditUrl = BaseUrl + "/endpoints/{name}/audit/{?page,per_page,direction,sort}",
+                    EndpointsUrl = BaseUrl + "/endpoints",
+                    ErrorsUrl = BaseUrl + "/errors/{?page,per_page,direction,sort}",
+                    EndpointsErrorUrl = BaseUrl + "/endpoints/{name}/errors/{?page,per_page,direction,sort}",
+                    MessageSearchUrl =
+                        BaseUrl + "/messages/search/{keyword}/{?page,per_page,direction,sort}",
+                    EndpointsMessageSearchUrl =
+                        BaseUrl +
+                        "/endpoints/{name}/messages/search/{keyword}/{?page,per_page,direction,sort}",
+                    EndpointsMessagesUrl =
+                        BaseUrl + "/endpoints/{name}/messages/{?page,per_page,direction,sort}",
+                    Name = SettingsReader<string>.Read("Name", "Particular Management"),
+                    Description = SettingsReader<string>.Read("Description", "Description for Particular Management"),
+                };
+
+
+                return Negotiate
+                    //.WithMediaRangeModel(MediaRange.FromString(@"application/vnd.particular-v1"), new RootUrls{
+                    //        AuditUrl = baseUrl + "/audit/{?page,per_page,direction,sort}",
+                    //        EndpointsAuditUrl = baseUrl + "/endpoints/{name}/audit/{?page,per_page,direction,sort}",
+                    //    })
+                    //.WithMediaRangeModel(MediaRange.FromString(@"application/vnd.particular-v2"), new RootUrls
+                    //    {
+                    //        AuditUrl = baseUrl + "/audit/{?page,per_page,direction,sort}",
+                    //        EndpointsAuditUrl = baseUrl + "/endpoints/{name}/audit/{?page,per_page,direction,sort}",
+                    //    })
+                    .WithModel(model)
+                    .WithHeader("ETag", CurrentEtag)
+                    .WithHeader("Last-Modified", CurrentLastModified)
+                    .WithHeader("Cache-Control", "private, max-age=0, must-revalidate");
+            };
             Get["/"] = parameters =>
             {
                 var model = new RootUrls

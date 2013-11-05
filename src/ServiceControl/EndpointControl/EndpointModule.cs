@@ -19,6 +19,7 @@ namespace ServiceBus.Management.EndpointControl
 
                     var endpoints = session.Query<Endpoints_Distinct.Result, Endpoints_Distinct>()
                         .Statistics(out stats)
+                        .ToArray()
                         .Select(r => r.Endpoint)
                         .ToArray();
 
